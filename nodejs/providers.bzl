@@ -1,5 +1,20 @@
 """
 Public providers, aspects and helpers that are shipped in the built-in rules_nodejs repository.
+
+Example of usage:
+
+```starlark
+load("@rules_nodejs//nodejs:providers.bzl", "DeclarationInfo")
+
+my_rule = rule(
+    ...
+    attrs = {
+        # make sure all dependencies provide TypeScript typings
+        "deps": attr.label_list(providers = [DeclarationInfo]),
+        ...
+    }
+)
+```
 """
 
 load(
