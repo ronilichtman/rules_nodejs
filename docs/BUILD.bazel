@@ -39,7 +39,7 @@ stardoc(
 stardoc(
     name = "providers",
     out = "providers.md_",
-    input = "//nodejs:providers.bzl",
+    input = "//:providers.bzl",
     tags = ["fix-windows"],
     deps = [
         "//:bzl",

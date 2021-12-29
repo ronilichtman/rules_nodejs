@@ -5,34 +5,18 @@
   or possibly a markdown file next to the .bzl file
  ********************* -->
 
-Public providers, aspects and helpers that are shipped in the built-in rules_nodejs repository.
+Public providers, aspects and helpers that are shipped in the built-in build_bazel_rules_nodejs repository.
 
-Example of usage:
+Note that many providers have moved to the rules_nodejs "core" package. See [Core API doc](./Core.md)
 
-```starlark
-load("@rules_nodejs//nodejs:providers.bzl", "DeclarationInfo")
-
-my_rule = rule(
-    ...
-    attrs = {
-        # make sure all dependencies provide TypeScript typings
-        "deps": attr.label_list(providers = [DeclarationInfo]),
-        ...
-    }
-)
-```
+Users should not load files under "/internal"
 
 
-<<<<<<< HEAD
 ## ExternalNpmPackageInfo
-=======
-## DeclarationInfo
->>>>>>> docs: update for 5.0
 
 **USAGE**
 
 <pre>
-<<<<<<< HEAD
 ExternalNpmPackageInfo(<a href="#ExternalNpmPackageInfo-direct_sources">direct_sources</a>, <a href="#ExternalNpmPackageInfo-has_directories">has_directories</a>, <a href="#ExternalNpmPackageInfo-path">path</a>, <a href="#ExternalNpmPackageInfo-sources">sources</a>, <a href="#ExternalNpmPackageInfo-workspace">workspace</a>)
 </pre>
 
@@ -58,40 +42,10 @@ Provides information about one or more external npm packages
 
 
 ## JSEcmaScriptModuleInfo
-=======
-DeclarationInfo(<a href="#DeclarationInfo-declarations">declarations</a>, <a href="#DeclarationInfo-transitive_declarations">transitive_declarations</a>, <a href="#DeclarationInfo-type_blocklisted_declarations">type_blocklisted_declarations</a>)
-</pre>
-
-The DeclarationInfo provider allows JS rules to communicate typing information.
-TypeScript's .d.ts files are used as the interop format for describing types.
-package.json files are included as well, as TypeScript needs to read the "typings" property.
-
-Do not create DeclarationInfo instances directly, instead use the declaration_info factory function.
-
-Note: historically this was a subset of the string-typed "typescript" provider.
-
-
-**FIELDS**
-
-<h4 id="DeclarationInfo-declarations">declarations</h4>
-
- A depset of typings files produced by this rule 
-<h4 id="DeclarationInfo-transitive_declarations">transitive_declarations</h4>
-
- A depset of typings files produced by this rule and all its transitive dependencies.
-This prevents needing an aspect in rules that consume the typings, which improves performance. 
-<h4 id="DeclarationInfo-type_blocklisted_declarations">type_blocklisted_declarations</h4>
-
- A depset of .d.ts files that we should not use to infer JSCompiler types (via tsickle) 
-
-
-## DirectoryFilePathInfo
->>>>>>> docs: update for 5.0
 
 **USAGE**
 
 <pre>
-<<<<<<< HEAD
 JSEcmaScriptModuleInfo(<a href="#JSEcmaScriptModuleInfo-direct_sources">direct_sources</a>, <a href="#JSEcmaScriptModuleInfo-sources">sources</a>)
 </pre>
 
@@ -108,53 +62,15 @@ Historical note: this was the typescript.es6_sources output
 
  Depset of direct JavaScript files and sourcemaps 
 <h4 id="JSEcmaScriptModuleInfo-sources">sources</h4>
-=======
-DirectoryFilePathInfo(<a href="#DirectoryFilePathInfo-directory">directory</a>, <a href="#DirectoryFilePathInfo-path">path</a>)
-</pre>
-
-Joins a label pointing to a TreeArtifact with a path nested within that directory.
-
-**FIELDS**
-
-<h4 id="DirectoryFilePathInfo-directory">directory</h4>
-
- a TreeArtifact (ctx.actions.declare_directory) 
-<h4 id="DirectoryFilePathInfo-path">path</h4>
-
- path relative to the directory 
-
-
-## JSModuleInfo
-
-**USAGE**
-
-<pre>
-JSModuleInfo(<a href="#JSModuleInfo-direct_sources">direct_sources</a>, <a href="#JSModuleInfo-sources">sources</a>)
-</pre>
-
-JavaScript files and sourcemaps.
-
-**FIELDS**
-
-<h4 id="JSModuleInfo-direct_sources">direct_sources</h4>
-
- Depset of direct JavaScript files and sourcemaps 
-<h4 id="JSModuleInfo-sources">sources</h4>
->>>>>>> docs: update for 5.0
 
  Depset of direct and transitive JavaScript files and sourcemaps 
 
 
-<<<<<<< HEAD
 ## JSNamedModuleInfo
-=======
-## LinkablePackageInfo
->>>>>>> docs: update for 5.0
 
 **USAGE**
 
 <pre>
-<<<<<<< HEAD
 JSNamedModuleInfo(<a href="#JSNamedModuleInfo-direct_sources">direct_sources</a>, <a href="#JSNamedModuleInfo-sources">sources</a>)
 </pre>
 
@@ -179,88 +95,83 @@ Historical note: this was the typescript.es5_sources output.
 
 
 ## NodeRuntimeDepsInfo
-=======
-LinkablePackageInfo(<a href="#LinkablePackageInfo-files">files</a>, <a href="#LinkablePackageInfo-package_name">package_name</a>, <a href="#LinkablePackageInfo-package_path">package_path</a>, <a href="#LinkablePackageInfo-path">path</a>)
-</pre>
-
-The LinkablePackageInfo provider provides information to the linker for linking pkg_npm built packages
-
-**FIELDS**
-
-<h4 id="LinkablePackageInfo-files">files</h4>
-
- Depset of files in this package (must all be contained within path) 
-<h4 id="LinkablePackageInfo-package_name">package_name</h4>
-
- The package name.
-
-This field is optional. If not set, the target can be made linkable to a package_name with the npm_link rule. 
-<h4 id="LinkablePackageInfo-package_path">package_path</h4>
-
- The directory in the workspace to link to.
-
-If set, link the 1st party dependencies to the node_modules under the package path specified.
-If unset, the default is to link to the node_modules root of the workspace. 
-<h4 id="LinkablePackageInfo-path">path</h4>
-
- The path to link to.
-
-Path must be relative to execroot/wksp. It can either an output dir path such as,
-
-`bazel-out/<platform>-<build>/bin/path/to/package` or
-`bazel-out/<platform>-<build>/bin/external/external_wksp>/path/to/package`
-
-or a source file path such as,
-
-`path/to/package` or
-`external/<external_wksp>/path/to/package` 
-
-
-## UserBuildSettingInfo
->>>>>>> docs: update for 5.0
 
 **USAGE**
 
 <pre>
-UserBuildSettingInfo(<a href="#UserBuildSettingInfo-value">value</a>)
+NodeRuntimeDepsInfo(<a href="#NodeRuntimeDepsInfo-deps">deps</a>, <a href="#NodeRuntimeDepsInfo-pkgs">pkgs</a>)
 </pre>
 
+Stores runtime dependencies of a nodejs_binary or nodejs_test
+
+These are files that need to be found by the node module resolver at runtime.
+
+Historically these files were passed using the Runfiles mechanism.
+However runfiles has a big performance penalty of creating a symlink forest
+with FS API calls for every file in node_modules.
+It also causes there to be separate node_modules trees under each binary. This
+prevents user-contributed modules passed as deps[] to a particular action from
+being found by node module resolver, which expects everything in one tree.
+
+In node, this resolution is done dynamically by assuming a node_modules
+tree will exist on disk, so we assume node actions/binary/test executions will
+do the same.
 
 
 **FIELDS**
 
-<h4 id="UserBuildSettingInfo-value">value</h4>
+<h4 id="NodeRuntimeDepsInfo-deps">deps</h4>
 
- (Undocumented) 
+ depset of runtime dependency labels 
+<h4 id="NodeRuntimeDepsInfo-pkgs">pkgs</h4>
+
+ list of labels of packages that provide ExternalNpmPackageInfo 
 
 
-<<<<<<< HEAD
+## NpmPackageInfo
+
+**USAGE**
+
+<pre>
+NpmPackageInfo(<a href="#NpmPackageInfo-direct_sources">direct_sources</a>, <a href="#NpmPackageInfo-has_directories">has_directories</a>, <a href="#NpmPackageInfo-path">path</a>, <a href="#NpmPackageInfo-sources">sources</a>, <a href="#NpmPackageInfo-workspace">workspace</a>)
+</pre>
+
+Provides information about one or more external npm packages
+
+**FIELDS**
+
+<h4 id="NpmPackageInfo-direct_sources">direct_sources</h4>
+
+ Depset of direct source files in these external npm package(s) 
+<h4 id="NpmPackageInfo-has_directories">has_directories</h4>
+
+ True if any sources are directories 
+<h4 id="NpmPackageInfo-path">path</h4>
+
+ The local workspace path that these external npm deps should be linked at. If empty, they will be linked at the root. 
+<h4 id="NpmPackageInfo-sources">sources</h4>
+
+ Depset of direct & transitive source files in these external npm package(s) and transitive dependencies 
+<h4 id="NpmPackageInfo-workspace">workspace</h4>
+
+ The workspace name that these external npm package(s) are provided from 
+
+
 ## js_ecma_script_module_info
-=======
-## declaration_info
->>>>>>> docs: update for 5.0
 
 **USAGE**
 
 <pre>
-<<<<<<< HEAD
 js_ecma_script_module_info(<a href="#js_ecma_script_module_info-sources">sources</a>, <a href="#js_ecma_script_module_info-deps">deps</a>)
 </pre>
 
 Constructs a JSEcmaScriptModuleInfo including all transitive sources from JSEcmaScriptModuleInfo providers in a list of deps.
 
 Returns a single JSEcmaScriptModuleInfo.
-=======
-declaration_info(<a href="#declaration_info-declarations">declarations</a>, <a href="#declaration_info-deps">deps</a>)
-</pre>
-
-Constructs a DeclarationInfo including all transitive files needed to type-check from DeclarationInfo providers in a list of deps.
->>>>>>> docs: update for 5.0
 
 **PARAMETERS**
 
 
-<<<<<<< HEAD
 <h4 id="js_ecma_script_module_info-sources">sources</h4>
 
 
@@ -268,48 +179,25 @@ Constructs a DeclarationInfo including all transitive files needed to type-check
 
 <h4 id="js_ecma_script_module_info-deps">deps</h4>
 
-=======
-<h4 id="declaration_info-declarations">declarations</h4>
-
-list of typings files
-
-
-
-<h4 id="declaration_info-deps">deps</h4>
-
-list of labels of dependencies where we should collect their DeclarationInfo to pass transitively
->>>>>>> docs: update for 5.0
 
 Defaults to `[]`
 
 
-<<<<<<< HEAD
 ## js_named_module_info
-=======
-## js_module_info
->>>>>>> docs: update for 5.0
 
 **USAGE**
 
 <pre>
-<<<<<<< HEAD
 js_named_module_info(<a href="#js_named_module_info-sources">sources</a>, <a href="#js_named_module_info-deps">deps</a>)
 </pre>
 
 Constructs a JSNamedModuleInfo including all transitive sources from JSNamedModuleInfo providers in a list of deps.
 
 Returns a single JSNamedModuleInfo.
-=======
-js_module_info(<a href="#js_module_info-sources">sources</a>, <a href="#js_module_info-deps">deps</a>)
-</pre>
-
-Constructs a JSModuleInfo including all transitive sources from JSModuleInfo providers in a list of deps.
->>>>>>> docs: update for 5.0
 
 **PARAMETERS**
 
 
-<<<<<<< HEAD
 <h4 id="js_named_module_info-sources">sources</h4>
 
 
@@ -317,22 +205,10 @@ Constructs a JSModuleInfo including all transitive sources from JSModuleInfo pro
 
 <h4 id="js_named_module_info-deps">deps</h4>
 
-=======
-<h4 id="js_module_info-sources">sources</h4>
-
-direct JS files
-
-
-
-<h4 id="js_module_info-deps">deps</h4>
-
-other targets that provide JSModuleInfo, typically from the deps attribute
->>>>>>> docs: update for 5.0
 
 Defaults to `[]`
 
 
-<<<<<<< HEAD
 ## run_node
 
 **USAGE**
@@ -413,5 +289,3 @@ mandatory: true
 
 
 
-=======
->>>>>>> docs: update for 5.0
